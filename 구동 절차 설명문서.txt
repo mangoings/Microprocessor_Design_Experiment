@@ -1,0 +1,81 @@
+1. 하드웨어 설정
+
+<구성품>
+
+1) STM32F4-Discovery 보드
+2) Encoder motor 
+3) Motor battery
+4) Motor driver(L298N)
+5) UART(YP-05)
+6) Cable(USB to Mini-B)
+7) Jumper cable
+
+
+<연결 방법>
+
+1) STM32F4-Discovery 보드와 UART의 Mini-B 단자와 노트북의 USB 단자를 cable로 연결. 
+
+2) STM32F4-Discovery 보드의 PG13 핀과 UART의 RX 핀을 연결.
+
+3) STM32F4-Discovery 보드의 5V 핀과 Motor driver의 IN1 핀을 연결.
+STM32F4-Discovery 보드의 END 핀과 Motor driver의 IN2 핀을 연결.
+STM32F4-Discovery 보드의 PC6 핀과 Motor driver의 ENA 핀을 연결.
+
+4) Motor driver의 12V 핀과 Motor battery의 붉은 선을 연결.
+Motor driver의 GND 핀과 Motor battery의 검은 선을 연결.
+
+5) Encoder motor의 1번(+12V) 핀과 Motor driver의 OUT1 핀을 연결.
+Encoder motor의 2번(-) 핀과 Motor driver의 OUT2 핀을 연결.
+Encoder motor의 3번(센서A) 핀과 STM32F4-Discovery 보드의 PA3 핀을 연결.
+Encoder motor의 5번(GND) 핀과 STM32F4-Discovery 보드의 GND 핀을 연결.
+Encoder motor의 6번(+5) 핀과 STM32F4-Discovery 보드의 5V 핀을 연결.
+
+
+<확인 및 검증>
+
+모든 연결이 올바른지 확인.
+하드웨어가 물리적으로 안정적이고, 연결이 견고한지 확인.
+
+
+2. 소프트웨어 설정
+
+1) 첨부된 zip파일의 압축을 풀고 파일 경로에서 cmd창 열기.
+
+2) $ make all을 cmd창에 입력해 필요 파일 생성.
+
+3) 아래 코드를 입력해 elf 파일 보드에 flash.
+$ openocd -f C:\OpenOCD-20211118-0.11.0\share\openocd\scripts\board/stm32f429disc1.cfg -c "program out.elf verify reset exit"
+
+4) 아래 코드를 입력해 디버그 using OpenOCD.
+$ openocd -f C:\OpenOCD-20211118-0.11.0\share\openocd\scripts\board/stm32f429disc1.cfg
+
+5) 아래 코드를 입력해 gdb 실행(새로운 터미널창)
+$ arm-none-eabi-gdb
+set arc arm
+target remote :3333
+load
+continue
+
+
+3. 동작 확인
+
+<버튼 테스트>
+
+버튼을 눌러 LED와 모터가 켜지는지 확인.
+버튼을 다시 눌러 LED와 모터가 꺼지는지 확인.
+
+
+4. 문제 해결
+
+<버튼이 작동하지 않는 경우>
+
+하드웨어 연결을 다시 확인.
+버튼의 물리적 상태를 확인.
+PA0 핀과 관련된 코드 설정을 확인.
+
+
+<LED 또는 모터가 작동하지 않는 경우>
+
+LED와 모터의 연결 상태를 다시 확인.
+PG13 및 PC6 핀 설정을 확인.
+전원이 제대로 공급되고 있는지 확인.
